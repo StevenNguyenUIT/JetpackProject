@@ -3,16 +3,17 @@ package com.nhinhnguyenuit.jetpackproject.data.model
 import com.google.gson.annotations.SerializedName
 
 data class User(
+    val id: Int,
     @SerializedName("login")
-    private val name: String,
+    val name: String,
     @SerializedName("avatar_url")
-    private val avatarUrl: String,
+    val avatarUrl: String,
     @SerializedName("html_url")
-    private val htmlUrl: String,
+    val htmlUrl: String,
     @SerializedName("location")
-    private val location: String = "Viet Nam",
+    val location: String = "Viet Nam",
     @SerializedName("followers_url")
-    private val followers: String,
+    val followers: String,
     @SerializedName("following_url")
-    private val following: String,
+    val following: String,
 )
