@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen{
+            MainScreen {
                 val navController = rememberNavController()
                 NavGraph(navController = navController)
             }
@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(content: @Composable () -> Unit) {
-    MaterialTheme{
-            content()
+    MaterialTheme {
+        content()
     }
 }
 
@@ -37,6 +37,6 @@ fun MainScreen(content: @Composable () -> Unit) {
 @Composable
 fun GreetingPreview() {
     JetpackProjectTheme {
-        MainScreen{}
+        MainScreen {}
     }
 }

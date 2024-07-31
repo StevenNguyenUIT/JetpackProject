@@ -3,12 +3,7 @@ package com.nhinhnguyenuit.jetpackproject.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -35,9 +30,8 @@ fun NavGraph(navController: NavHostController) {
             val login = backStackEntry.arguments?.getString(Screen.DetailArgLogin.route) ?: ""
             MainScaffold(centerTopContent = "User Details",
                 content = { UserDetailScreen(login = login, innerPadding = it) },
-                onClick = {navController.navigateUp()})
+                onClick = { navController.navigateUp() })
         }
-
     }
 }
 

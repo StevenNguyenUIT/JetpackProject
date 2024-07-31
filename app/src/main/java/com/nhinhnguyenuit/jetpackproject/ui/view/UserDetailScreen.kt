@@ -113,7 +113,6 @@ private fun FollowCard(image: Int, num: Int, content: String) {
                     .padding(15.dp)
                     .size(30.dp)
                     .clip(CircleShape)
-
             )
         }
         Text(text = "${num}+", fontWeight = FontWeight.Bold)

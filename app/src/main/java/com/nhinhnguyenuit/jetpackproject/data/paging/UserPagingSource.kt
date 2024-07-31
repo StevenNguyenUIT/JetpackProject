@@ -7,16 +7,20 @@ import com.nhinhnguyenuit.jetpackproject.data.local.toUser
 import com.nhinhnguyenuit.jetpackproject.data.local.toUserEntity
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.data.network.ApiService
+import javax.inject.Inject
 
-class UserPagingSource(
+
+internal const val PAGE_SIZE = 20
+
+class UserPagingSource @Inject constructor(
     private val apiService: ApiService,
     private val userDao: UserDao
 ) : PagingSource<Int, User>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         return try {
-            val since = params.key ?: 0
-            val response = apiService.getUsers(20, since)
+            val page = params.key ?: 0
+            val response = apiService.getUsers(perPage = PAGE_SIZE, page)
             userDao.insertAll(response.map { it.toUserEntity() })
             val nextKey = if (response.isEmpty()) null else response.last().id
 

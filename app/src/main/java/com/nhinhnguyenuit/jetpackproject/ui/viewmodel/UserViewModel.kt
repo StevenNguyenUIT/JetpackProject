@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userRepository: UserRepository,
-): ViewModel() {
+) : ViewModel() {
     val userFlow = userRepository.getUsersStream().cachedIn(viewModelScope)
 
     private val _userDetail = MutableStateFlow<User?>(null)
@@ -26,17 +26,17 @@ class UserViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val localUsers = userRepository.getLocalUsers()
-            if (localUsers.isNotEmpty()){
+            if (localUsers.isNotEmpty()) {
                 _localUsers.value = localUsers
             }
         }
     }
 
-    fun getUserDetail(login: String){
+    fun getUserDetail(login: String) {
         viewModelScope.launch {
             try {
                 _userDetail.value = userRepository.getUserDetail(login)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 //Handle the error accordingly
             }
         }
@@ -49,5 +49,4 @@ class UserViewModel @Inject constructor(
             userRepository.saveUsers((_localUsers.value))
         }
     }
-
 }

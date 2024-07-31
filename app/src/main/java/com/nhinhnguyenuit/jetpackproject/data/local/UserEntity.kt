@@ -17,9 +17,25 @@ data class UserEntity(
 )
 
 fun UserEntity.toUser(): User {
-    return User(id, name, avatarUrl, htmlUrl, location, followers, following)
+    return User(
+        id = id,
+        name = name,
+        avatarUrl = avatarUrl,
+        htmlUrl = htmlUrl,
+        location = location,
+        followers = followers,
+        following = following
+    )
 }
 
 fun User.toUserEntity(): UserEntity {
-    return UserEntity(id, name, avatarUrl, htmlUrl, location, followers, following)
+    return UserEntity(
+        id = id,
+        name = name,
+        avatarUrl = avatarUrl,
+        htmlUrl = htmlUrl,
+        location = location,
+        followers = followers,
+        following = following
+    )
 }
