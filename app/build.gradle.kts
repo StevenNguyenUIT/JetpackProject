@@ -77,4 +77,17 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //coil
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
+    //Paging
+    implementation("androidx.paging:paging-runtime:3.3.1")
+    implementation("androidx.paging:paging-compose:3.3.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+
+    //Room
+    implementation("androidx.room:room-runtime:2.4.2")
+    ksp("androidx.room:room-compiler:2.4.2")
+    implementation("androidx.room:room-ktx:2.4.2")
 }

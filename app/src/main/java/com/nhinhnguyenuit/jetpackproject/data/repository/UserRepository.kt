@@ -1,12 +1,40 @@
 package com.nhinhnguyenuit.jetpackproject.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.nhinhnguyenuit.jetpackproject.data.local.UserDao
+import com.nhinhnguyenuit.jetpackproject.data.local.toUser
+import com.nhinhnguyenuit.jetpackproject.data.local.toUserEntity
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.data.network.ApiService
-import com.nhinhnguyenuit.jetpackproject.data.network.RetrofitInstance
+import com.nhinhnguyenuit.jetpackproject.data.paging.UserPagingSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-//    val apiService: ApiService
+    private val apiService: ApiService,
+    private val userDao: UserDao
 ) {
-    suspend fun getUsers(): List<User> = RetrofitInstance.api.getUsers()
+    fun getUsersStream(): Flow<PagingData<User>> = Pager(
+        PagingConfig(pageSize = 20)
+    ){
+        UserPagingSource(apiService, userDao)
+    }.flow
+
+    suspend fun getUserDetail(login: String): User{
+        return apiService.getUserDetail(login = login)
+    }
+
+    suspend fun getLocalUsers(): List<User>{
+        return userDao.getAllUsers().map { it.toUser() }
+    }
+
+    suspend fun saveUsers(users: List<User>){
+        userDao.insertAll(users.map { it.toUserEntity() })
+    }
+
+    suspend fun clearLocalUsers(){
+        userDao.deleteAllUsers()
+    }
 }

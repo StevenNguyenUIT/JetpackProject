@@ -11,9 +11,7 @@ data class User(
     @SerializedName("html_url")
     val htmlUrl: String,
     @SerializedName("location")
-    val location: String = "Viet Nam",
-    @SerializedName("followers_url")
-    val followers: String,
-    @SerializedName("following_url")
-    val following: String,
+    val location: String?,
+    val followers: Int,
+    val following: Int,
 )

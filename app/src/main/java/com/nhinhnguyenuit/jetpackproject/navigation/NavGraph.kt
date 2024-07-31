@@ -15,13 +15,12 @@ fun NavGraph(navController: NavHostController) {
         composable(route = Screen.ListScreen.route) {
             UserListScreen(navController = navController)
         }
-
         composable(
             route = Screen.DetailScreen.route,
-            arguments = listOf(navArgument(Screen.DetailArgId.route) { type = NavType.IntType })
+            arguments = listOf(navArgument(Screen.DetailArgLogin.route) { type = NavType.StringType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt(Screen.DetailArgId.route) ?: 0
-            UserDetailScreen(id = id)
+            val login = backStackEntry.arguments?.getString(Screen.DetailArgLogin.route) ?: ""
+            UserDetailScreen(login = login)
         }
 
     }
