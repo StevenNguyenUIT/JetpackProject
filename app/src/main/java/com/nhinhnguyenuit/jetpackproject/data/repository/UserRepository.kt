@@ -2,14 +2,12 @@ package com.nhinhnguyenuit.jetpackproject.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.nhinhnguyenuit.jetpackproject.data.local.UserDao
 import com.nhinhnguyenuit.jetpackproject.data.local.toUser
 import com.nhinhnguyenuit.jetpackproject.data.local.toUserEntity
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.data.network.ApiService
 import com.nhinhnguyenuit.jetpackproject.data.paging.UserPagingSource
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
