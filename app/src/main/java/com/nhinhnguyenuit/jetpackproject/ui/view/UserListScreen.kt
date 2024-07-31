@@ -17,7 +17,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,11 +28,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LOG_TAG
@@ -43,6 +50,7 @@ import coil.transform.GrayscaleTransformation
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.navigation.Screen
 import com.nhinhnguyenuit.jetpackproject.ui.viewmodel.UserViewModel
+import org.w3c.dom.Text
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -111,6 +119,7 @@ fun UserListScreen(
                         )
                     }
                 }
+
                 users.loadState.append is LoadState.Error -> {
                     val e = users.loadState.append as LoadState.Error
                     item {
@@ -132,22 +141,55 @@ fun UserListScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun UserItem(user: User, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(16.dp)
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        elevation = CardDefaults.cardElevation(30.dp),
+        modifier = Modifier.padding(6.dp)
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(16.dp)
+        ) {
+            UserCard(user) {
+                Text(
+                    text = user.htmlUrl,
+                    fontSize = 15.sp,
+                    color = Color.Blue,
+                    style = TextStyle(
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    modifier = Modifier.padding(top = 10.dp)
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+fun UserCard(user: User, content :@Composable ()-> Unit) {
+    Card {
         Image(
             painter = rememberImagePainter(data = user.avatarUrl), contentDescription = null,
             modifier = Modifier
-                .size(50.dp)
+                .padding(8.dp)
+                .size(100.dp)
                 .clip(CircleShape)
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(text = user.name, style = MaterialTheme.typography.headlineLarge)
-            Text(text = user.htmlUrl, style = MaterialTheme.typography.bodyLarge)
-        }
+    }
+    Spacer(modifier = Modifier.width(8.dp))
+    Column {
+        Text(
+            text = user.name,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
+        HorizontalDivider(thickness = 2.dp)
+        content()
     }
 }

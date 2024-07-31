@@ -15,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     val userFlow = userRepository.getUsersStream().cachedIn(viewModelScope)
 

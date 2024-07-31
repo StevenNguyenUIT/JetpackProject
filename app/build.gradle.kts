@@ -49,6 +49,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions{
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -90,4 +93,11 @@ dependencies {
     implementation("androidx.room:room-runtime:2.4.2")
     ksp("androidx.room:room-compiler:2.4.2")
     implementation("androidx.room:room-ktx:2.4.2")
+
+    //Testing dependencies
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
 }

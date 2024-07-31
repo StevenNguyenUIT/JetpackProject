@@ -3,6 +3,7 @@ package com.nhinhnguyenuit.jetpackproject.ui.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +20,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -39,10 +45,21 @@ fun UserDetailScreen(
         Column(
                 modifier = Modifier.padding(16.dp)
         ) {
-            Image(painter = rememberImagePainter(data = user.avatarUrl), contentDescription = null,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape))
+            Card {
+                Row {
+                    UserCard(user) {
+                        Text(
+                            text = user.htmlUrl,
+                            fontSize = 15.sp,
+                            color = Color.Blue,
+                            style = TextStyle(
+                                textDecoration = TextDecoration.Underline
+                            ),
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Title: ${user.name}", style = MaterialTheme.typography.titleLarge)
             Text(text = "Location: ${user.location ?: "Unknown"}")
