@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,19 +51,23 @@ import coil.transform.GrayscaleTransformation
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.navigation.Screen
 import com.nhinhnguyenuit.jetpackproject.ui.viewmodel.UserViewModel
+import com.nhinhnguyenuit.jetpackproject.utils.NetworkUtil
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.w3c.dom.Text
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun UserListScreen(
     navController: NavHostController,
-    viewModel: UserViewModel = hiltViewModel()
+    viewModel: UserViewModel = hiltViewModel(),
+    paddingValues: PaddingValues
 ) {
     val users = viewModel.userFlow.collectAsLazyPagingItems()
     val localUsers by viewModel.localUsers.collectAsState()
 
     if (localUsers.isNotEmpty()) {
         LazyColumn(
+            contentPadding = paddingValues,
             modifier = Modifier.padding(16.dp)
         ) {
             items(localUsers) { user ->
@@ -181,7 +186,9 @@ fun UserItem(user: User, onClick: () -> Unit, content: @Composable () -> Unit) {
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Column {
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
                 Text(
                     text = user.name,
                     fontWeight = FontWeight.Bold,
@@ -193,10 +200,4 @@ fun UserItem(user: User, onClick: () -> Unit, content: @Composable () -> Unit) {
             }
         }
     }
-}
-
-@OptIn(ExperimentalCoilApi::class)
-@Composable
-fun UserCard(user: User, content: @Composable () -> Unit) {
-
 }

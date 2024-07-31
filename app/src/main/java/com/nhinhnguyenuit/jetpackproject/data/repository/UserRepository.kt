@@ -16,7 +16,7 @@ class UserRepository @Inject constructor(
     private val apiService: ApiService,
     private val userDao: UserDao
 ) {
-    fun getUsersStream(): Flow<PagingData<User>> = Pager(
+    fun getUsersStream() = Pager(
         PagingConfig(pageSize = 20)
     ){
         UserPagingSource(apiService, userDao)

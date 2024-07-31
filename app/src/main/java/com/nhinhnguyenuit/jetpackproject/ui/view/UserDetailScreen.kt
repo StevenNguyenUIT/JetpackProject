@@ -38,6 +38,7 @@ import coil.compose.rememberImagePainter
 import com.nhinhnguyenuit.jetpackproject.navigation.Screen
 import com.nhinhnguyenuit.jetpackproject.ui.viewmodel.UserViewModel
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.rounded.Face
 import androidx.compose.material.icons.rounded.Favorite
@@ -45,13 +46,16 @@ import androidx.compose.material.icons.sharp.AccountCircle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import com.nhinhnguyenuit.jetpackproject.R
 import com.nhinhnguyenuit.jetpackproject.data.model.User
+import com.nhinhnguyenuit.jetpackproject.utils.Helper.roundNumber
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun UserDetailScreen(
-    login: String, viewModel: UserViewModel = hiltViewModel()
+    login: String, viewModel: UserViewModel = hiltViewModel(),
+    innerPadding: PaddingValues
 ) {
     val userDetail by viewModel.userDetail.collectAsState()
 
@@ -61,7 +65,9 @@ fun UserDetailScreen(
 
     userDetail?.let { user ->
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(paddingValues = innerPadding)
+                .padding(16.dp)
         ) {
             UserItem(user = user,
                 onClick = { },
@@ -89,17 +95,21 @@ fun UserDetailScreen(
             ) {
                 FollowCard(
                     image = R.drawable.followers,
-                    num = user.followers,
+                    num = user.followers.roundNumber(),
                     content = "Follower"
                 )
                 FollowCard(
                     image = R.drawable.following,
-                    num = user.following,
+                    num = user.following.roundNumber(),
                     content = "Following"
                 )
             }
-            Text(text = "Blog", style = MaterialTheme.typography.titleMedium)
-            Text(text = user.htmlUrl)
+            Text(
+                text = "Blog",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Text(text = user.htmlUrl, modifier = Modifier.padding(top = 10.dp))
         }
     }
 }
@@ -117,13 +127,13 @@ private fun FollowCard(image: Int, num: Int, content: String) {
                 contentDescription = "follower",
                 contentScale = ContentScale.Inside,
                 modifier = Modifier
-                    .padding(10.dp)
-                    .size(40.dp)
+                    .padding(15.dp)
+                    .size(30.dp)
                     .clip(CircleShape)
 
             )
         }
-        Text(text = "${num}+")
+        Text(text = "${num}+", fontWeight = FontWeight.Bold)
         Text(text = content)
     }
 }
