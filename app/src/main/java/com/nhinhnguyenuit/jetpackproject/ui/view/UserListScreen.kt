@@ -66,9 +66,7 @@ fun UserListScreen(
             modifier = Modifier.padding(16.dp)
         ) {
             items(localUsers) { user ->
-                UserItem(user = user) {
-                    navController.navigate("${Screen.DetailBase.route}${user.name}")
-                }
+                UserCard(user = user, navController = navController)
             }
         }
     } else {
@@ -78,9 +76,7 @@ fun UserListScreen(
             items(users.itemCount) { index ->
                 val user = users[index]
                 user?.let {
-                    UserItem(user = user) {
-                        navController.navigate("${Screen.DetailBase.route}${user.name}")
-                    }
+                    UserCard(user, navController)
                 }
             }
             when {
@@ -138,9 +134,29 @@ fun UserListScreen(
     }
 }
 
+@Composable
+private fun UserCard(
+    user: User,
+    navController: NavHostController
+) {
+    UserItem(user = user,
+        onClick = { navController.navigate("${Screen.DetailBase.route}${user.name}") },
+        content = {
+            Text(
+                text = user.htmlUrl,
+                fontSize = 15.sp,
+                color = Color.Blue,
+                style = TextStyle(
+                    textDecoration = TextDecoration.Underline
+                ),
+                modifier = Modifier.padding(top = 10.dp)
+            )
+        })
+}
+
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun UserItem(user: User, onClick: () -> Unit) {
+fun UserItem(user: User, onClick: () -> Unit, content: @Composable () -> Unit) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -154,16 +170,26 @@ fun UserItem(user: User, onClick: () -> Unit) {
                 .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {
-            UserCard(user) {
-                Text(
-                    text = user.htmlUrl,
-                    fontSize = 15.sp,
-                    color = Color.Blue,
-                    style = TextStyle(
-                        textDecoration = TextDecoration.Underline
-                    ),
-                    modifier = Modifier.padding(top = 10.dp)
+            Card {
+                Image(
+                    painter = rememberImagePainter(data = user.avatarUrl),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(100.dp)
+                        .clip(CircleShape)
                 )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(
+                    text = user.name,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+                HorizontalDivider(thickness = 2.dp)
+                content()
             }
         }
     }
@@ -171,25 +197,6 @@ fun UserItem(user: User, onClick: () -> Unit) {
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun UserCard(user: User, content :@Composable ()-> Unit) {
-    Card {
-        Image(
-            painter = rememberImagePainter(data = user.avatarUrl), contentDescription = null,
-            modifier = Modifier
-                .padding(8.dp)
-                .size(100.dp)
-                .clip(CircleShape)
-        )
-    }
-    Spacer(modifier = Modifier.width(8.dp))
-    Column {
-        Text(
-            text = user.name,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
-        HorizontalDivider(thickness = 2.dp)
-        content()
-    }
+fun UserCard(user: User, content: @Composable () -> Unit) {
+
 }

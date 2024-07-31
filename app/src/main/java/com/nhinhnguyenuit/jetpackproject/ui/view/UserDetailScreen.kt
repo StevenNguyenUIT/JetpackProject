@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +24,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -28,7 +35,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.nhinhnguyenuit.jetpackproject.navigation.Screen
 import com.nhinhnguyenuit.jetpackproject.ui.viewmodel.UserViewModel
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.rounded.Face
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.sharp.AccountCircle
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.nhinhnguyenuit.jetpackproject.R
+import com.nhinhnguyenuit.jetpackproject.data.model.User
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -41,34 +59,71 @@ fun UserDetailScreen(
         viewModel.getUserDetail(login)
     }
 
-    userDetail?.let { user->
+    userDetail?.let { user ->
         Column(
-                modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
-            Card {
-                Row {
-                    UserCard(user) {
+            UserItem(user = user,
+                onClick = { },
+                content = {
+                    Row(
+                        modifier = Modifier.padding(top = 10.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.LocationOn,
+                            contentDescription = "location"
+                        )
                         Text(
-                            text = user.htmlUrl,
-                            fontSize = 15.sp,
-                            color = Color.Blue,
-                            style = TextStyle(
-                                textDecoration = TextDecoration.Underline
-                            ),
-                            modifier = Modifier.padding(top = 10.dp)
+                            text = user.location ?: "Unknown",
+                            fontSize = 18.sp,
                         )
                     }
-                }
-            }
+                })
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Title: ${user.name}", style = MaterialTheme.typography.titleLarge)
-            Text(text = "Location: ${user.location ?: "Unknown"}")
-            Text(text = "Followers: ${user.followers}")
-            Text(text = "Following: ${user.following}")
-            Text(text = "Html_url: ${user.htmlUrl}")
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "View on GitHub")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                FollowCard(
+                    image = R.drawable.followers,
+                    num = user.followers,
+                    content = "Follower"
+                )
+                FollowCard(
+                    image = R.drawable.following,
+                    num = user.following,
+                    content = "Following"
+                )
             }
+            Text(text = "Blog", style = MaterialTheme.typography.titleMedium)
+            Text(text = user.htmlUrl)
         }
+    }
+}
+
+@Composable
+private fun FollowCard(image: Int, num: Int, content: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            modifier = Modifier.clip(CircleShape)
+        ) {
+            Image(
+                painter = painterResource(id = image),
+                contentDescription = "follower",
+                contentScale = ContentScale.Inside,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+
+            )
+        }
+        Text(text = "${num}+")
+        Text(text = content)
     }
 }
