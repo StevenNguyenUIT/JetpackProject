@@ -1,5 +1,6 @@
 package com.nhinhnguyenuit.jetpackproject.ui.view
 
+import android.view.Display
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import coil.compose.rememberImagePainter
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.navigation.Screen
 import com.nhinhnguyenuit.jetpackproject.ui.viewmodel.UserViewModel
+import okhttp3.internal.http2.Http2Reader
 
 @Composable
 fun UserListScreen(
@@ -40,6 +42,7 @@ fun UserListScreen(
     val localUsers by viewModel.localUsers.collectAsState()
 
     if (localUsers.isNotEmpty()) {
+//        Display users from local users
         LazyColumn(
             contentPadding = paddingValues,
             modifier = Modifier.padding(16.dp)
@@ -49,13 +52,16 @@ fun UserListScreen(
             }
         }
     } else {
+//        Display users from paging source
         LazyColumn(
+            contentPadding = paddingValues,
             modifier = Modifier.padding(16.dp)
         ) {
             items(users.itemCount) { index ->
                 val user = users[index]
                 user?.let { UserCard(user, navController) }
             }
+//            Handle Loading state
             when {
                 users.loadState.refresh === LoadState.Loading -> {
                     item {
@@ -111,6 +117,7 @@ fun UserListScreen(
     }
 }
 
+// UserCard will be reused for loading from local and from paging
 @Composable
 private fun UserCard(
     user: User,
@@ -131,6 +138,7 @@ private fun UserCard(
         })
 }
 
+// UserItem will be reused for ListScreen and DetailScreen
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun UserItem(user: User, onClick: () -> Unit, content: @Composable () -> Unit) {

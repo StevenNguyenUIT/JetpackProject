@@ -15,6 +15,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
+//    use Flow for paging data
     val userFlow = userRepository.getUsersStream().cachedIn(viewModelScope)
 
     private val _userDetail = MutableStateFlow<User?>(null)
@@ -24,6 +25,7 @@ class UserViewModel @Inject constructor(
     val localUsers: StateFlow<List<User>> = _localUsers
 
     init {
+//        Load local users on initialization
         viewModelScope.launch {
             val localUsers = userRepository.getLocalUsers()
             if (localUsers.isNotEmpty()) {
@@ -32,6 +34,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
+//    Fetch user details
     fun getUserDetail(login: String) {
         viewModelScope.launch {
             try {
@@ -39,14 +42,6 @@ class UserViewModel @Inject constructor(
             } catch (e: Exception) {
                 //Handle the error accordingly
             }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.launch {
-            userRepository.clearLocalUsers()
-            userRepository.saveUsers((_localUsers.value))
         }
     }
 }

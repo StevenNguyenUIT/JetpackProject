@@ -1,80 +1,70 @@
 package com.nhinhnguyenuit.jetpackproject.ui.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhinhnguyenuit.jetpackproject.data.model.User
 import com.nhinhnguyenuit.jetpackproject.data.repository.UserRepository
-import io.mockk.MockKAnnotations
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
-import kotlin.coroutines.ContinuationInterceptor
 
 
+@ExperimentalCoroutinesApi
 class UserViewModelTest {
+
     @get:Rule
     val coroutineRule = MainCoroutineRule()
 
-    private val repository: UserRepository = mockk()
-    private lateinit var viewModel: UserViewModel
+    private val userRepository: UserRepository = mockk()
+    private lateinit var userViewModel: UserViewModel
 
     @Before
     fun setUp() {
-        viewModel = UserViewModel(repository)
+        userViewModel = UserViewModel(userRepository)
     }
-
+//    test getUserDetail updates userDetail
     @Test
-    fun `getUserDetail should fetch user detail from repository`() = runTest {
-        val user = User(1, "login", "avatar_url", "html_url", "location", 10, 20)
-        coEvery { repository.getUserDetail("login") } returns user
+    fun getUserDetail() = runTest {
+        val login = "test_user"
+        val mockUser = User(1, login, "avatar_url", "html_url", "location", 100, 50)
 
-        viewModel.getUserDetail("login")
+        // Mock the UserRepository to return a user
+        coEvery { userRepository.getUserDetail(login) } returns mockUser
 
-        val result = viewModel.userDetail.first()
-        assertEquals(user, result)
-        coVerify { repository.getUserDetail("login") }
+        // Observe the userDetail StateFlow
+        val observer = StateFlowTestObserver(userViewModel.userDetail)
+
+        // Call the getUserDetail function
+        userViewModel.getUserDetail(login)
+
+        // Verify that the userDetail StateFlow is updated correctly
+        assertEquals(mockUser, observer.awaitValue())
+
+        // Verify that the UserRepository's getUserDetail function was called
+        coVerify { userRepository.getUserDetail(login) }
     }
-
+//    test loadLocalUsers on initialization
     @Test
-    fun `localUsers should be populated on init`() = runTest {
-        val users = listOf(User(1, "login", "avatar_url", "html_url", "location", 10, 20))
-        coEvery { repository.getLocalUsers() } returns users
+    fun loadLocalUsers() = runTest {
+        val mockLocalUsers = listOf(User(1, "login", "avatar_url", "html_url", "location", 100, 50))
 
-        viewModel = UserViewModel(repository)
-        val result = viewModel.localUsers.first()
-        assertEquals(users, result)
-        coVerify { repository.getLocalUsers() }
-    }
-}
+        // Mock the UserRepository to return local users
+        coEvery { userRepository.getLocalUsers() } returns mockLocalUsers
 
-@ExperimentalCoroutinesApi
-class MainCoroutineRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
+        // Create a new instance of UserViewModel to trigger initialization
+        userViewModel = UserViewModel(userRepository)
 
-    override fun starting(description: Description?) {
-        super.starting(description)
-        Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
-    }
+        // Observe the localUsers StateFlow
+        val observer = StateFlowTestObserver(userViewModel.localUsers)
 
-    override fun finished(description: Description?) {
-        super.finished(description)
-        Dispatchers.resetMain()
+        // Verify that the localUsers StateFlow is updated correctly
+        assertEquals(mockLocalUsers, observer.awaitValue())
+
+        // Verify that the UserRepository's getLocalUsers function was called
+        coVerify { userRepository.getLocalUsers() }
     }
 }

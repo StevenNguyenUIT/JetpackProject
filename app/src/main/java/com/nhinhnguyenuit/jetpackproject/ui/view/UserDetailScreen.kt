@@ -43,6 +43,7 @@ fun UserDetailScreen(
     val userDetail by viewModel.userDetail.collectAsState()
 
     LaunchedEffect(key1 = login) {
+//        Fetch user details on screen load
         viewModel.getUserDetail(login)
     }
 
@@ -97,6 +98,7 @@ fun UserDetailScreen(
     }
 }
 
+// FollowCard will be reused for following and follower components
 @Composable
 private fun FollowCard(image: Int, num: Int, content: String) {
     Column(

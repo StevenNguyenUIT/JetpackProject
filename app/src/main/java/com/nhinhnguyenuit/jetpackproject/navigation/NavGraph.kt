@@ -42,7 +42,9 @@ private fun MainScaffold(
     content: @Composable (innerPadding: PaddingValues) -> Unit,
     onClick: () -> Unit
 ) {
+//    Scaffold provides the structure for the screen then reuse for all screens
     Scaffold(
+        // TopAppBar with title use callback function
         topBar = {
             CenterAlignedTopAppBar(title = { Text(text = centerTopContent) },
                 navigationIcon = {
